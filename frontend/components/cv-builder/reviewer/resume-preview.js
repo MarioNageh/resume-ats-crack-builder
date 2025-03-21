@@ -9,6 +9,7 @@ import CoursesCv from "@/components/cv-builder/reviewer/certification-preview";
 import SkillsCv from "@/components/cv-builder/reviewer/skills-preview";
 import LanguagesSection from "@/components/cv-builder/reviewer/language-preview";
 import useAppContext from "@/hooks/useAppContext";
+import ProjectsPreview from "@/components/cv-builder/reviewer/projects-preview";
 
 function ResumeContainer({children}) {
     return (
@@ -83,9 +84,7 @@ export function ListContainer({children, cv, className, onClick}) {
 export default ResumeContainer;
 
 
-
-
-export function ResumePreview({data,isListItemPreview=false}) {
+export function ResumePreview({data, isListItemPreview = false}) {
     const contentRef = useRef(null);
     const {resumeData} = useAppContext();
     const cvData = isListItemPreview ? data : resumeData;
@@ -93,8 +92,8 @@ export function ResumePreview({data,isListItemPreview=false}) {
 
     const renderSections = () => {
         const sections = {
-            contactInformation: <ContactInformationCv data={data} isListItemPreview={isListItemPreview} />,
-            profile: <ProfileCv data={data} isListItemPreview={isListItemPreview} />,
+            contactInformation: <ContactInformationCv data={data} isListItemPreview={isListItemPreview}/>,
+            profile: <ProfileCv data={data} isListItemPreview={isListItemPreview}/>,
             workExperience: (
                 <WorkExperienceCv
                     data={data}
@@ -111,6 +110,15 @@ export function ResumePreview({data,isListItemPreview=false}) {
                     className={"mt-2"}
                     droppableId={"education"}
                     type={"EDUCATION"}
+                />
+            ),
+            projects: (
+                <ProjectsPreview
+                    className={"mt-2"}
+                    data={data}
+                    isListItemPreview={isListItemPreview}
+                    droppableId="projects"
+                    type="PROJECTS"
                 />
             ),
             courses: (
@@ -147,12 +155,12 @@ export function ResumePreview({data,isListItemPreview=false}) {
     };
     return <div id="resumePages">
         <ResumePage data={data} isListItemPreview={isListItemPreview} ref={contentRef}>
-            {renderSections(data,isListItemPreview)}
+            {renderSections(data, isListItemPreview)}
         </ResumePage>
     </div>
 }
 
-export  function ResumePreviewer({data}) {
+export function ResumePreviewer({data}) {
     return (
         <ResumeContainer>
             <ResumePreview data={data}/>

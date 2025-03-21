@@ -132,9 +132,8 @@ REST_FRAMEWORK = {
 }
 
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
-CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
-CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "http://127.0.0.1:8000,http://localhost:8000").split(",")
 AUTH_USER_MODEL = 'auth_app.User'
 ADMIN_SITE_HEADER = "Your ATS Cracker Admin"
 APPEND_SLASH = True
@@ -149,3 +148,16 @@ STATIC_ROOT = "/app/static"
 STATIC_URL = '/static/'
 MEDIA_ROOT = "/app/media"
 MEDIA_URL = '/media/'
+
+
+
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", 'django-insecure-iroj*vdrvkx(md_iil(g%hngo3@e*)hxc4p1xhll5k_8szq2_6')
+DEBUG = os.getenv("DEBUG", "False") == "True"
+
+CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "http://127.0.0.1:8000,http://localhost:8000").split(",")
+
+CSRF_TRUSTED_ORIGINS = [
+    f"https://{host}" if not host.startswith(('http://', 'https://')) else host
+    for host in os.getenv("CSRF_TRUSTED_ORIGINS", "http://127.0.0.1:8000,http://localhost:8000").split(",")
+    if host
+]

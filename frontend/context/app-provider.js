@@ -65,13 +65,15 @@ const AppProvider = ({children}) => {
                 "education": "EDUCATION",
                 "certification": "CERTIFICATION",
                 "skills": "SKILLS",
-                "languages": "LANGUAGES"
+                "languages": "LANGUAGES",
+                "projects": "PROJECTS"
             },
 
             order: [
                 "contactInformation",
                 "profile",
                 "workExperience",
+                "projects",
                 "education",
                 "courses",
                 "skills",
@@ -87,12 +89,21 @@ const AppProvider = ({children}) => {
             return;
         }
 
-
-        let cv = resumeList.find(cv => cv.id == id);
+        let cv = resumeList.find(cv => cv.id === id);
         if (!cv) {
             const response = await cvGetAction(id);
             if (response.success) {
                 cv = response.cv;
+            }
+        }
+
+        if (cv) {
+            // Backward compatibility
+            if (!cv.data.projects) {
+                cv.data.projects = [];
+                cv.data.titles.projects = "PROJECTS";
+                const workExpIndex = cv.data.order.indexOf("workExperience");
+                cv.data.order.splice(workExpIndex + 1, 0, "projects");
             }
         }
         setResumeData(cv);

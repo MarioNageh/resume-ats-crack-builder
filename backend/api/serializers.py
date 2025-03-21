@@ -1,11 +1,4 @@
 import json
-
-from rest_framework import serializers
-from rest_framework.renderers import JSONRenderer
-
-from .models import CV
-
-import json
 from rest_framework import serializers
 from .models import CV
 
@@ -14,7 +7,7 @@ class CVSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CV
-        fields = ['id', 'user', 'title', 'data', 'created_at']
+        fields = ['id', 'user',  'data', 'created_at']
         read_only_fields = ['user', 'created_at']
 
     def to_representation(self, instance):

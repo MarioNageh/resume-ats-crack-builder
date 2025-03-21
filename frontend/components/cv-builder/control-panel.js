@@ -18,12 +18,15 @@ import LanguagesEditor from "@/components/cv-builder/control-components/language
 import LanguageItemEditor from "@/components/cv-builder/control-components/languages-item-editor";
 import useDndContext from "@/context/dnd-context";
 import DroppableUtil from "@/components/cv-builder/utils/droppable-utils";
+import ProjectsEditor from "@/components/cv-builder/control-components/projects-editor";
+import ProjectItemEditor from "@/components/cv-builder/control-components/project-item-editor";
 
 
 export default function ControlPanel({id}) {
     const {resumeData, controlPanel, currentEditIndex, user, setControlPanelIndex} = useAppContext();
     const [isLoaded, setIsLoaded] = useState(true);
     const {Draggable} = useDndContext();
+
     useEffect(() => {
         if (id === 'cvnew' && !resumeData.data.name) {
             setControlPanelIndex(ControlPanelView.PersonalDetailsEditor);
@@ -35,6 +38,7 @@ export default function ControlPanel({id}) {
         const editors = {
             profile: <ProfileEditor />,
             workExperience: <WorkExperienceEditor />,
+            projects: <ProjectsEditor />,
             education: <EducationEditor />,
             courses: <CertificationEditor />,
             skills: <SkillsEditor />,
@@ -42,7 +46,13 @@ export default function ControlPanel({id}) {
             contactInformation: <ContactInformationPreview />,
         };
 
-        return resumeData.data.order.map((section, index) => {
+        let sectionsToRender = [...resumeData.data.order];
+        // Backward compatibility
+        let missingSections = Object.keys(editors).filter((section) => !sectionsToRender.includes(section));
+        sectionsToRender = [...sectionsToRender, ...missingSections];
+
+        return sectionsToRender.map((section, index) => {
+            console.log("section", section);
             return (
                 <Draggable key={section} draggableId={section} index={index}>
                     {(provided) => (
@@ -59,6 +69,16 @@ export default function ControlPanel({id}) {
             );
         });
     };
+
+
+
+
+
+
+
+
+
+
     if (isLoaded)
         return <div>Preparing .... </div>
 
@@ -86,6 +106,10 @@ export default function ControlPanel({id}) {
             controlPanel === ControlPanelView.CertificationEditor && <CertificationItemEditor/>
 
         }
+
+
+        {controlPanel === ControlPanelView.ProjectsEditor && <ProjectItemEditor/>}
+
         {
             controlPanel === ControlPanelView.SkillsEditor && <SkillItemEditor/>
         }

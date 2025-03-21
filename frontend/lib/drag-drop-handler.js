@@ -4,7 +4,7 @@ const updateResumeData = (newData, setResumeData, syncResumeData) => {
 };
 
 const onDragEnd = (result, resumeData, setResumeData, syncResumeData) => {
-    const { destination, source } = result;
+    const {destination, source} = result;
 
     if (!destination) return;
 
@@ -183,6 +183,56 @@ const onDragEnd = (result, resumeData, setResumeData, syncResumeData) => {
             },
         });
     }
+
+
+    if (source.droppableId === "projects" || source.droppableId === "projects-preview") {
+        const newProjects = [...resumeData.data.projects];
+        const [removed] = newProjects.splice(source.index, 1);
+        newProjects.splice(destination.index, 0, removed);
+        updateData({
+            ...resumeData,
+            data: {
+                ...resumeData.data,
+                projects: newProjects,
+            },
+        });
+        return;
+    }
+
+    if (source.droppableId.includes("project-achievements")) {
+        const projectIndex = parseInt(source.droppableId.split("-")[2]);
+        const newProjects = [...resumeData.data.projects];
+        const achievements = newProjects[projectIndex].achievements;
+        const [removed] = achievements.splice(source.index, 1);
+        achievements.splice(destination.index, 0, removed);
+        newProjects[projectIndex].achievements = achievements;
+        updateData({
+            ...resumeData,
+            data: {
+                ...resumeData.data,
+                projects: newProjects,
+            },
+        });
+        return;
+    }
+
+    if (source.droppableId.includes("project-technologies")) {
+        const projectIndex = parseInt(source.droppableId.split("-")[2]);
+        const newProjects = [...resumeData.data.projects];
+        const technologies = newProjects[projectIndex].technologies;
+        const [removed] = technologies.splice(source.index, 1);
+        technologies.splice(destination.index, 0, removed);
+        newProjects[projectIndex].technologies = technologies;
+        updateData({
+            ...resumeData,
+            data: {
+                ...resumeData.data,
+                projects: newProjects,
+            },
+        });
+        return;
+    }
+
 };
 
-export { onDragEnd };
+export {onDragEnd};

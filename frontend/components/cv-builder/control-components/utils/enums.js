@@ -4,8 +4,9 @@ const ControlPanelView = Object.freeze({
     PersonalDetailsEditor: 2,
     EducationEditor: 3,
     CertificationEditor: 4,
-    SkillsEditor: 5,
-    LanguagesEditor: 6,
+    ProjectsEditor: 5,
+    SkillsEditor: 6,
+    LanguagesEditor: 7,
 });
 
 const ControlPanelMode = Object.freeze({
