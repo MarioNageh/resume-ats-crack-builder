@@ -73,3 +73,11 @@ Screenshot:
 - Skills
 - Languages
 
+
+
+COPY .defaultenv.example to .env
+- copy `.env` into both `frontend` and `backend` folders and fill in the required values.
+and then run
+```bash
+docker-compose -f docker-compose.prod.yml up
+```
