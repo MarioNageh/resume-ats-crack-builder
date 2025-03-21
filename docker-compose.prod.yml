@@ -9,12 +9,15 @@ services:
     volumes:
       - ./backend:/app
       - static_volume:/app/static
+      - media_volume:/app/media
+      - logs_volume:/app/logs
+      - ./backend/logs:/app/logs
     ports:
       - "8000:8000"
     environment:
-      - DEBUG=True
-      - ALLOWED_HOSTS=django,127.0.0.1
-      - CSRF_TRUSTED_ORIGINS=http://127.0.0.1:8861,http://django:8000
+      - DEBUG=False
+      - ALLOWED_HOSTS=django,${DOMAIN},www.${DOMAIN}
+      - CSRF_TRUSTED_ORIGINS=https://${DOMAIN},https://www.${DOMAIN}
     networks:
       - app-network
 
@@ -31,25 +34,65 @@ services:
       - app-network
     command: sh -c "npm install && npm run build && npm run start"
     environment:
-      - NEXT_PUBLIC_BACKEND_URL=http://django:8000
-      - NEXT_PUBLIC_ALLOWED_ORIGIN=http://127.0.0.1:8861
+      - NEXT_PUBLIC_BACKEND_URL=https://${DOMAIN}/api
+      - NEXT_PUBLIC_ALLOWED_ORIGIN=https://${DOMAIN}
 
   nginx:
     image: nginx:latest
     container_name: nginx
     volumes:
       - ./nginx/prod/nginx.conf:/etc/nginx/nginx.conf
-      - static_volume:/app/static
+      - letsencrypt-etc:/etc/letsencrypt
+      - letsencrypt-www:/var/lib/letsencrypt
+      - media_volume:/app/media
     ports:
-      - "8861:80"
+      - "80:80"
+      - "443:443"
     depends_on:
       - nextjs
       - django
     networks:
       - app-network
+    restart: always
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - letsencrypt-etc:/etc/letsencrypt
+      - letsencrypt-www:/var/lib/letsencrypt
+    depends_on:
+      - nginx
+    command: >
+      certonly
+      --webroot
+      -w /var/lib/letsencrypt
+      --email ${SSL_EMAIL}
+      --agree-tos
+      --no-eff-email
+      --force-renewal
+      -d mn-developer.com
+      -d www.mn-developer.com
+    restart: "no"
+
+  certbot-renew:
+    image: certbot/certbot
+    volumes:
+      - letsencrypt-etc:/etc/letsencrypt
+      - letsencrypt-www:/var/lib/letsencrypt
+    entrypoint: sh
+    command: >
+      -c '
+      echo "0 0,12 * * * certbot renew --quiet" > /etc/crontabs/root;
+      crond -f
+      '
+    restart: always
 
 volumes:
   static_volume:
+  letsencrypt-etc:
+  letsencrypt-www:
+  media_volume:
+  logs_volume:
 
 networks:
   app-network:
