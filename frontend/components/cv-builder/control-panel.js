@@ -52,7 +52,6 @@ export default function ControlPanel({id}) {
         sectionsToRender = [...sectionsToRender, ...missingSections];
 
         return sectionsToRender.map((section, index) => {
-            console.log("section", section);
             return (
                 <Draggable key={section} draggableId={section} index={index}>
                     {(provided) => (

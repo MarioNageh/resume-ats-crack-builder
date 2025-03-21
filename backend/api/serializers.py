@@ -7,7 +7,7 @@ class CVSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CV
-        fields = ['id', 'user',  'data', 'created_at']
+        fields = ['id', 'user',  'data', 'title','created_at']
         read_only_fields = ['user', 'created_at']
 
     def to_representation(self, instance):
