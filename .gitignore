@@ -21,3 +21,4 @@ media/
 *.pyc
 __pycache__/
 test_*.py
+.venv
