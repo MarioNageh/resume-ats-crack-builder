@@ -83,12 +83,13 @@ export default function RegisterModal({ onChangeModal,closeModal }) {
     };
 
     return (
-        <div className="fixed inset-0 flex items-start justify-center p-4" style={{top: "15%"}}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
             <Dialog.Panel
-                className="w-full max-w-md h-[600px] transform overflow-hidden
+                className="w-full max-w-md transform overflow-hidden
                 rounded-2xl bg-white p-6 text-left align-middle shadow-xl
                 transition-all pt-6 sm:p-12 sm:pt-8 md:min-h-min
-                md:min-w-[500px] md:p-14 md:pt-10 lg:p-16 lg:pt-16"
+                md:min-w-[500px] md:p-14 md:pt-10 lg:p-16 lg:pt-16
+                relative top-0 my-auto"
             >
                 <Dialog.Title
                     as="h1"
@@ -97,6 +98,7 @@ export default function RegisterModal({ onChangeModal,closeModal }) {
                 >
                     Create Account
                 </Dialog.Title>
+
                 <form onSubmit={handleSubmit} className="mt-10 lg:mt-12">
                     {/* Username Field */}
                     <InputField
@@ -110,22 +112,19 @@ export default function RegisterModal({ onChangeModal,closeModal }) {
                         disabled={isSubmitting}
                     />
 
-
                     {/* Email Field */}
-                    <div className="relative mt-10 lg:mt-12">
-                        <InputField
-                            id="emailId"
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            label="Email"
-                            Icon={EmailIcon}
-                            disabled={isSubmitting}
-                        />
-                    </div>
+                    <InputField
+                        id="emailId"
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        label="Email"
+                        Icon={EmailIcon}
+                        disabled={isSubmitting}
+                    />
 
-                    {/*Password Input*/}
+                    {/* Password Field */}
                     <div className="relative mt-10 lg:mt-12">
                         <InputField
                             id="passwordId"
@@ -141,52 +140,41 @@ export default function RegisterModal({ onChangeModal,closeModal }) {
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
                             disabled={isSubmitting}
-                            className="absolute right-0 top-[58%] -translate-y-1/2 cursor-pointer text-base font-bold hover:opacity-80"
+                            className="absolute right-0 top-1/2 -translate-y-1/2 text-base font-bold hover:opacity-80"
                         >
                             {showPassword ? "Hide" : "Show"}
                         </button>
                     </div>
 
+                    {/* Confirm Password Field */}
+                    <InputField
+                        id="confirmPasswordId"
+                        type={showPassword ? "text" : "password"}
+                        name="confirm_password"
+                        value={formData.confirm_password}
+                        onChange={handleChange}
+                        label="Confirm Password"
+                        Icon={PasswordIcon}
+                        disabled={isSubmitting}
+                    />
 
-                    {/*Confirm Password Input*/}
-                    <div className="relative mt-10 lg:mt-12">
-                        <InputField
-                            id="confirmPasswordId"
-                            type={showPassword ? "text" : "password"}
-                            name="confirm_password"
-                            value={formData.confirm_password}
-                            onChange={handleChange}
-                            label="Confirm Password"
-                            Icon={PasswordIcon}
-                            disabled={isSubmitting}
-                        />
-                    </div>
-
-                    {/* Submit Button */}
-                    <div className="mt-8 flex justify-center sm:mt-11 md:mt-14 lg:mt-16">
+                    <div className="flex justify-between items-center mt-10 lg:mt-12">
+                        <button
+                            type="button"
+                            onClick={onChangeModal}
+                            className="text-blue-600 hover:underline"
+                        >
+                            Already have an account?
+                        </button>
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className={`border-none cursor-pointer appearance-none touch-manipulation flex items-center justify-center focus-visible:outline-blue-600 px-7 py-2 rounded-full font-extrabold h-[60px] text-[17px] min-w-[180px] text-white bg-gradientPinkRed shadow-product w-[300px] ${
-                                isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:opacity-80"
-                            }`}
+                            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
                         >
-                            {isSubmitting ? "Creating Account ..." : "Create Account"}
+                            {isSubmitting ? "Creating Account..." : "Create Account"}
                         </button>
                     </div>
                 </form>
-
-                {/* Link to Switch to Login */}
-                <div className="mt-8 flex justify-center">
-                    <button
-                        onClick={onChangeModal}
-                        disabled={isSubmitting}
-                        type="button"
-                        className="border-none cursor-pointer appearance-none touch-manipulation flex items-center justify-center focus-visible:outline-blue-600 rounded-xl text-base font-bold hover:opacity-80"
-                    >
-                        Have already an account? Login
-                    </button>
-                </div>
             </Dialog.Panel>
         </div>
     );

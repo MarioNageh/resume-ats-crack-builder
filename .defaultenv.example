@@ -1,0 +1,25 @@
+# Django Settings
+DJANGO_SECRET_KEY=generate_a_long_random_secret_key_here
+DEBUG=False
+ALLOWED_HOSTS=mn-developer.com,www.mn-developer.com
+
+# SSL and Domain Configuration
+DOMAIN=mn-developer.com
+SSL_EMAIL=marionageh7@gmail.com
+
+# Backend Settings
+DJANGO_SETTINGS_MODULE=project.settings
+
+
+# Local
+NEXT_PUBLIC_BACKEND_URL=http://127.0.0.1:8000
+NEXT_PUBLIC_ALLOWED_ORIGIN=http://127.0.0.1:8000
+
+
+
+
+# Frontend Settings
+NEXT_PUBLIC_BACKEND_URL=https://${DOMAIN}/api
+NEXT_PUBLIC_ALLOWED_ORIGIN=https://${DOMAIN}
+
+

@@ -1,0 +1,44 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Create necessary directories with proper permissions
+RUN mkdir -p /app/static /app/media /app/logs && \
+    chmod -R 755 /app/logs
+
+
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY req.txt .
+RUN pip install --no-cache-dir -r req.txt \
+    && pip install python-dotenv
+
+# Copy project files
+COPY . .
+
+# Load environment variables
+RUN pip install python-dotenv
+COPY .env .env
+
+# Set environment variables
+ENV DJANGO_SETTINGS_MODULE=project.settings
+ENV PYTHONUNBUFFERED=1
+
+# Collect static files
+RUN python manage.py collectstatic --noinput
+
+# Run database migrations
+RUN python manage.py migrate
+
+EXPOSE 8000
+
+# Use entrypoint script to load environment variables
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]

@@ -1,5 +1,7 @@
+"use client";
 import ImageViewer from "@/components/about/image-viewer";
 
+import { useState, useEffect } from 'react';
 
 function Profile() {
     return (
@@ -39,7 +41,45 @@ function Profile() {
     );
 }
 
-export default async function AboutPage() {
+function MobileNotSupported() {
+    return (
+        <div className="min-h-screen flex flex-col items-center justify-center text-center bg-gray-900 text-white p-4">
+            <div className="max-w-md">
+                <h2 className="text-3xl font-bold mb-4">Mobile App Not Supported</h2>
+                <p className="text-lg mb-6">
+                    We apologize, but our ATS Cracker application is currently optimized for desktop browsers.
+                    Please access the application from a desktop or laptop computer for the best experience.
+                </p>
+                <div className="bg-red-600 text-white p-3 rounded-lg">
+                    <p className="font-semibold">Recommended Minimum Screen Width: 1024px</p>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default function AboutPage() {
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 1024);
+        };
+
+        // Check initial width
+        checkMobile();
+
+        // Add event listener to check on resize
+        window.addEventListener('resize', checkMobile);
+
+        // Cleanup listener
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    if (isMobile) {
+        return <MobileNotSupported />;
+    }
+
     return (
         <div className="text-white min-h-screen px-8 py-12">
             <h1 className="text-4xl font-bold mb-8 text-center">
@@ -139,11 +179,7 @@ export default async function AboutPage() {
 
                     </div>
                 </div>
-
-
             </section>
-
-
         </div>
     );
 }

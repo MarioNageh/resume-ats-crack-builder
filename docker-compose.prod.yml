@@ -1,0 +1,56 @@
+version: "3.8"
+
+services:
+  django:
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile.prod
+    container_name: django-backend
+    volumes:
+      - ./backend:/app
+      - static_volume:/app/static
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=True
+      - ALLOWED_HOSTS=django,127.0.0.1
+      - CSRF_TRUSTED_ORIGINS=http://127.0.0.1:8861,http://django:8000
+    networks:
+      - app-network
+
+  nextjs:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile.prod
+    container_name: next-frontend
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+    command: sh -c "npm install && npm run build && npm run start"
+    environment:
+      - NEXT_PUBLIC_BACKEND_URL=http://django:8000
+      - NEXT_PUBLIC_ALLOWED_ORIGIN=http://127.0.0.1:8861
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./nginx/prod/nginx.conf:/etc/nginx/nginx.conf
+      - static_volume:/app/static
+    ports:
+      - "8861:80"
+    depends_on:
+      - nextjs
+      - django
+    networks:
+      - app-network
+
+volumes:
+  static_volume:
+
+networks:
+  app-network:
+    driver: bridge
