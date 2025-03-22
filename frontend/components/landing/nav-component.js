@@ -16,7 +16,7 @@ const routes = [
 ];
 
 export default function NavComponent() {
-    const { isAuthenticated,user } = useAppContext();
+    const { isAuthenticated, user } = useAppContext();
     const userRoutes = isAuthenticated ? [
         ...routes,
         {
@@ -24,10 +24,11 @@ export default function NavComponent() {
             title: 'Dashboard',
             path: '/dashboard'
         }
-    ] : routes
+    ] : routes;
+
     return (
-        <nav className="hidden lg:grid grid-cols-[max-content_max-content_max-content_max-content]
-         justify-end gap-6 pr-2 text-xl">
+        <nav className="hidden bg-black text-white rounded-lg lg:grid grid-cols-[max-content_max-content_max-content_max-content] 
+            justify-end gap-6 pr-2 text-xl">
             {userRoutes.map((route, index) => {
                 const { icon, title, path } = route;
                 return <NavItem key={index} href={path} icon={icon}>{title}</NavItem>
